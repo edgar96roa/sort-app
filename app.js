@@ -6,6 +6,27 @@ const PORT = process.env.PORT
 
 app.use(bodyParser.json());
 
+const quickSort = (arr) => {
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const pivot = arr[0];
+    const left = [];
+    const right = [];
+
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < pivot) {
+            left.push(arr[i]);
+        } else {
+            right.push(arr[i]);
+        }
+    }
+
+    return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+
 app.post('/sort', (req, res) => {
     try {
         const { sortKeys, payload } = req.body;
@@ -19,14 +40,10 @@ app.post('/sort', (req, res) => {
         // Sort matrixes by specified keys
         sortKeys.forEach((key) => {
             if (Array.isArray(payload[key])) {
-                if (key === "numbers") {
-                    payload[key].sort((a, b) => a - b); // Sort numbers in ascendent way
-                } else {
-                    payload[key].sort();
-                }
+                payload[key] = quickSort(payload[key]);
             }
         });
-    
+        console.log(payload);
         return res.status(200).json(payload);
     } catch (error) {
         console.error('Request error: ', error);
