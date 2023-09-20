@@ -43,7 +43,7 @@ app.post('/sort', (req, res) => {
                 payload[key] = quickSort(payload[key]);
             }
         });
-        console.log(payload);
+
         return res.status(200).json(payload);
     } catch (error) {
         console.error('Request error: ', error);
